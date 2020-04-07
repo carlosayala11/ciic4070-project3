@@ -14,33 +14,27 @@ public class StopAndWaitLayer {
     private byte[] buffer = new byte[256];
     private int sequenceNumber = -1;
     
-    public StopAndWaitLayer(int port, InetAddress laddr) throws SocketException {
-        this.socket = new UnreliableCommunicationLayer(port, laddr);
-        
+    public StopAndWaitLayer(int port) throws SocketException {
+        this.socket = new UnreliableCommunicationLayer(port);
     }
-    
-    public void close() {
-        this.socket.close();
+    public StopAndWaitLayer() throws SocketException {
+        this.socket = new UnreliableCommunicationLayer();
+
     }
 
-    public boolean isClosed() {
-        return this.socket.isClosed();
-    }
-
-    public void send(StopAndWaitPacket swp) throws Exception {
+    public void sendPacket(StopAndWaitPacket swp) throws IOException {
+        this.sequenceNumber = swp.getLength();
         if (this.sequenceNumber < 0)
-            throw new Exception("The sequence number is not defined");
+            throw new IOException("The sequence number is not defined");
         this.socket.setSoTimeout(timeInMillis);
         DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
         DatagramPacket packet = swp.getPacket();
         this.addSequenceNumber(this.sequenceNumber, packet);
         boolean sendingPacket = true;
         while (sendingPacket) {
-            socket.send(packet);
+            socket.sendPacket(packet);
             try {
                 socket.receive(receivePacket);
-                String receivedPacket = new String(receivePacket.getData(), 0, receivePacket.getLength()-1);
-                System.out.println(receivedPacket);
                 this.sequenceNumber = this.sequenceNumber % 2 == 0 ? 1 : 0;
                 sendingPacket = false;
             } catch (SocketTimeoutException e) {
@@ -50,9 +44,9 @@ public class StopAndWaitLayer {
         this.socket.setSoTimeout(0);
     }
 
-    public void receive(StopAndWaitPacket swp) throws IOException {
-        socket.receive(swp.getPacket());
-        socket.send(swp.getPacket());
+    public void receivePacket(StopAndWaitPacket swp) throws IOException {
+        socket.receivePacket(swp.getPacket());
+        socket.sendPacket(swp.getPacket());
     }
 
 

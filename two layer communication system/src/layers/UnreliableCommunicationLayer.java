@@ -11,9 +11,16 @@ public class UnreliableCommunicationLayer extends DatagramSocket {
     public UnreliableCommunicationLayer(int port, InetAddress iaddress) throws SocketException {
         super(port, iaddress);
     }
+    public UnreliableCommunicationLayer(int port) throws SocketException {
+        super(port);
+    }
+    public UnreliableCommunicationLayer() throws SocketException {
+        super();
+    }
 
 
-    public void send(DatagramPacket packet) throws IOException {
+
+    public void sendPacket(DatagramPacket packet) throws IOException {
         int lostPacket = new Random().nextInt(5); 
         int duplicatePacket = new Random().nextInt(10);
         if (lostPacket == 2)
@@ -26,12 +33,10 @@ public class UnreliableCommunicationLayer extends DatagramSocket {
             }else{
                 this.send(packet);
             }
-        } 
-        return;
+        }
     }
 
     public void receivePacket(DatagramPacket packet) throws IOException {
         this.receive(packet);
-        return;
     }
 }

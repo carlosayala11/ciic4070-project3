@@ -1,4 +1,3 @@
-
 import layers.StopAndWaitLayer;
 import packets.StopAndWaitPacket;
 import java.io.IOException;

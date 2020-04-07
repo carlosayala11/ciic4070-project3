@@ -24,10 +24,10 @@ public class UnreliableCommunicationLayer extends DatagramSocket {
         int lostPacket = new Random().nextInt(5); 
         int duplicatePacket = new Random().nextInt(10);
         if (lostPacket == 2)
-            System.out.println("Packet was lost");
+            System.out.println("Packet was lost.");
         else { 
             if(duplicatePacket == 1) { 
-                System.out.println("Packet was duplicated"); 
+                System.out.println("Packet was duplicated.");
                 this.send(packet);
                 this.send(packet);
             }else{

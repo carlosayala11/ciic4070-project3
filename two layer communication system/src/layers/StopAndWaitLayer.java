@@ -25,7 +25,7 @@ public class StopAndWaitLayer {
     public void sendPacket(StopAndWaitPacket swp) throws IOException {
         this.sequenceNumber = swp.getLength();
         if (this.sequenceNumber < 0)
-            throw new IOException("The sequence number is not defined");
+            throw new IOException("The sequence number is not defined.");
         this.socket.setSoTimeout(timeInMillis);
         DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
         DatagramPacket packet = swp.getPacket();

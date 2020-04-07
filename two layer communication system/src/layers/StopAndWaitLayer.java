@@ -32,9 +32,11 @@ public class StopAndWaitLayer {
         boolean sendingPacket = true;
         while (sendingPacket) {
             socket.sendPacket(packet);
+            if(socket.getDuplicated()== true){
+                sendingPacket=false;
+            }
             try {
                 socket.receive(receivePacket);
-                this.sequenceNumber = this.sequenceNumber % 2 == 0 ? 1 : 0;
                 sendingPacket = false;
             } catch (SocketTimeoutException e) {
                 System.out.println("Re-transmit packet. Time limit was reached!");

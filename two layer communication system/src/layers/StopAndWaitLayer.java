@@ -29,7 +29,6 @@ public class StopAndWaitLayer {
         this.socket.setSoTimeout(timeInMillis);
         DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
         DatagramPacket packet = swp.getPacket();
-        this.addSequenceNumber(this.sequenceNumber, packet);
         boolean sendingPacket = true;
         while (sendingPacket) {
             socket.sendPacket(packet);
@@ -49,19 +48,4 @@ public class StopAndWaitLayer {
         socket.sendPacket(swp.getPacket());
     }
 
-
-    public void setSequenceNumber(int sequenceNumber) {
-        this.sequenceNumber = sequenceNumber;
-    }
-
-    private void addSequenceNumber(int sequenceNumber, DatagramPacket packet) {
-    	byte[] data = packet.getData();
-    	int length = packet.getLength();
-        byte[] newData = new byte[length + 1];
-        for (int i=0; i < length; i++)
-            newData[i] = data[i];
-        newData[length] = (byte) sequenceNumber;
-        packet.setData(newData);
-        packet.setLength(length + 1);
-    }
 }
